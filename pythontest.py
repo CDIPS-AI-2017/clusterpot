@@ -29,3 +29,7 @@ str3 = "It was sweltering hot, especially in the large classroom where they did 
 print(nltk.sentiment.util.demo_vader_instance(str))
 print(nltk.sentiment.util.demo_vader_instance(str2))
 print(nltk.sentiment.util.demo_vader_instance(str3))
+
+SA = nltk.sentiment.vader.SentimentIntensityAnalyzer()
+
+print(SA.polarity_scores(str))
