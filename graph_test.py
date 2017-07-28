@@ -42,7 +42,7 @@ edge_labels=dict([((u,v,),d['weight'])
 edge_colors = ['black' for edge in G.edges()]
 #node_colors = ['red' if (G.degree(node) <=7) else 'blue' for node in G.nodes()]
 node_colors = ['blue' for node in G.nodes()]
-node_sizes = [500+200*G.degree(node) for node in G.nodes()]
+node_sizes = [200+100*G.degree(node) for node in G.nodes()]
 
 pos=nx.spring_layout(G)
 nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)
