@@ -7,6 +7,7 @@ import string
 from spacy.en import English
 import spacy
 from spacy.symbols import nsubj, VERB, dobj
+import textacy
 #import nltk
 #from nltk import sentiment
 #import nltk.data
@@ -49,8 +50,10 @@ def getKeyMemories(keyword, book):
             if end >= len(book) or end == 0:
                 end = len(book)
             memory = book[start:end]
-            if memory[0] is "\"":
+            if (memory[0] is "\""):
                 mem.append(book[book.rfind("\"", 0, start-1):end])
+            elif (memory[0] is "'"):
+                mem.append(book[book.rfind("'", 0, start-1):end])
             else:
                 mem.append(memory)
         i += 1
@@ -90,14 +93,14 @@ def getKeySentences(memList, keyword):
     return keySentenceList
 
 
-book = open("./book5.txt", 'r').read().encode('ascii','ignore').decode('unicode_escape').lower()
+book = open("./book3.txt", 'r').read().encode('ascii','ignore').decode('unicode_escape').lower()
 nlp = spacy.load('en')
 
 characters = open("./list_of_people.txt", 'r').read()
 list_of_people = characters.split("\n")
 #print(list_of_people)
 
-people_in_book = Counter()
+'''people_in_book = Counter()
 
 for person in list_of_people:
     sum = 0
@@ -116,15 +119,46 @@ for person in list_of_people:
 
 print(people_in_book)
 #print(getKeyMemories("mr. weasley", book))
-'''keyword = "mcgonagall"
+'''
+
+keyword = "malfoy"
 
 mem = getKeyMemories(keyword, book)
 
-print(mem[2])
+#print(mem[4])
 print()
 
-memList = re.split("[\!\?\.]", mem[2])
+#memList = re.split("[\!\?\.]", mem[2])
 
-print(getKeySentences(memList,keyword))'''
+#print(getKeySentences(memList,keyword))
+
+#for i in range(0,len(mem)):
+doc = nlp(mem[8])
+list = [x for x in textacy.extract.subject_verb_object_triples(doc)]
+v = sorted([(x, x.rank) for x in textacy.spacy_utils.get_main_verbs_of_sent(doc)], 
+    key = lambda x: -x[1], )
+print(v)
+for tuple in list:
+    '''if keyword in tuple[0].text:
+        print(tuple)
+        continue
+    if keyword in tuple[2].text:
+        print(tuple)
+        print(i)
+        continue
+    elif (tuple[0].text == "she"): #and the previous person mentioned was snape
+        j = tuple[0].start - 1
+        while j > 0:
+            #print(doc[j].text) #this is a token index
+            if (doc[j].dep == nsubj):
+                if (doc[j].text == keyword):
+                    print(tuple)
+                    break
+                else:
+                    break
+            j = j-1'''
+    for i in range(0,20):
+        if v[i][0].text in tuple[1].text:
+            print(tuple)
 
 #this misses instances of things done where he is referred to as 'he' instead of "Malfoy".
